@@ -20,7 +20,6 @@ def captcha():
     else:
         global BACKOFF_MULTIPLIER
         BACKOFF_MULTIPLIER = 0
-        print('Backoff Multiplier:', BACKOFF_MULTIPLIER)
         solveCaptcha()
 
 
@@ -36,43 +35,36 @@ def detectedBot():
         deny = pyautogui.locateOnScreen('pycho2/deny.png')
     pyautogui.click(deny, clicks=2, interval=0.5)
     secondsToSleep = 30 * BACKOFF_MULTIPLIER
-    print('Waiting', secondsToSleep,
-          'seconds to have better luck with the captcha')
+    print('Detectaron el bot, esperando', secondsToSleep,
+          'segundos para tener mejor suerte con el captcha')
     time.sleep(secondsToSleep)
 
 
 def solveCaptcha():
-    exce = True
-    while exce:
-        listenAudio()
-        pyautogui.click('pycho2/verify.png')
-        pyautogui.moveTo(1,20)
-        if pyautogui.locateOnScreen('pycho2/multipleSolutions.png') is None:
-            exce = False
-        elif pyautogui.locateOnScreen('pycho2/botDetection.png'):
-            detectedBot()
-            return None
-        else:
-            solveCaptcha()
-            return None
-        approved = False
-        retry = 0
-        while not approved and retry < 10:
-            approveButton = pyautogui.locateOnScreen('pycho2/approve.png')
-            redCheckbox = pyautogui.locateOnScreen('pycho2/notARobotRed.png')
-            if approveButton is not None:
-                pyautogui.click(approveButton)
-                print('aprobado')
-                approved = True
-            elif redCheckbox is not None:
-                pyautogui.click(redCheckbox)
-                print('check rojo apretado')
-                approved = True
-                captcha()
-            retry += 1
+    listenAudioAndVerify()
+    if pyautogui.locateOnScreen('pycho2/botDetection.png'):
+        detectedBot()
+        return None
+    approved = False
+    retry = 0
+    while not approved and retry < 10:
+        approveButton = pyautogui.locateOnScreen('pycho2/approve.png')
+        redCheckbox = pyautogui.locateOnScreen('pycho2/notARobotRed.png')
+        if approveButton is not None:
+            pyautogui.click(approveButton)
+            print('Aprobado')
+            approved = True
+        elif redCheckbox is not None:
+            pyautogui.click(redCheckbox)
+            print('Check rojo apretado')
+            approved = True
+            captcha()
+        retry += 1
+    if retry == 10:
+        pyautogui.hotkey('alt', 'f4')
 
 
-def listenAudio():
+def listenAudioAndVerify():
     r = sr.Recognizer()
     mic = sr.Microphone()
     bandst = False
@@ -81,10 +73,15 @@ def listenAudio():
         if playbtn is not None:
             bandst = True
             with mic as source:
-                pyautogui.doubleClick(playbtn)
-                print('presiono play')
+                pyautogui.click(playbtn)
+                print('Presiono play')
                 audio = r.listen(source, timeout=10)
-                print('escuchado')
+                print('Escuchado')
                 audioloco = r.recognize_sphinx(audio)
                 pyautogui.click(playbtn[0], playbtn[1] + 70)
                 pyautogui.write(audioloco)
+    pyautogui.click('pycho2/verify.png')
+    time.sleep(1)
+    pyautogui.move(0, -100)
+    if pyautogui.locateOnScreen('pycho2/multipleSolutions.png') is not None:
+        listenAudioAndVerify()

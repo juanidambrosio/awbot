@@ -3,12 +3,12 @@ import time
 import captcha
 import refresh
 
-def claim(position):
+def claim(foundPosition):
     cross = pyautogui.locateOnScreen(
         'pycho/claim1otracruz.png') or pyautogui.locateOnScreen('pycho/claim2cruz.png')
     if cross is not None:
         pyautogui.click(cross)
-    pyautogui.click(position, clicks=2, interval=0.5)
+    pyautogui.click(foundPosition, clicks=2, interval=0.5)
     band = False
     retry = 0
     while not band:
@@ -24,11 +24,11 @@ def claim(position):
             pyautogui.click(hideDetails)
         else:
             retry += 1
-            if retry == 10:
+            if retry == 5:
                 band = True
                 refresh.refreshMiner()
                 return None
-    captchaList = ['pycho2/tiki.png', 'pycho2/headphone.png', 'pycho2/eye.png']
+    captchaList = ['pycho2/tiki.png', 'pycho2/headphone.png', 'pycho2/eye.png', 'pycho2/notARobotRed.png']
     position = 0
     band = False
     while not band:
