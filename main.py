@@ -3,20 +3,20 @@ import os
 import time
 import claim
 
-camino = 'pycho'
-listaDeArc = os.listdir(camino)
+path = 'pycho'
+imagesList = os.listdir(path)
 tout = time.time()
 while True:
-    for i in range(len(listaDeArc)):
-        foto = camino + '/' + listaDeArc[i]
-        posicion = pyautogui.locateOnScreen(foto)
+    for position in range(len(imagesList)):
+        photo = path + '/' + imagesList[position]
+        foundPosition = pyautogui.locateOnScreen(photo)
         tin = time.time()
-        if posicion is not None:
-            print(listaDeArc[i])
-            if (listaDeArc[i] == 'claim2.png' or listaDeArc[i] == 'claim1.png') and (tin-tout > 2):
-                claim.claim(posicion)
-            elif not (listaDeArc[i] == 'claim2.png' and listaDeArc[i] == 'claim1.png'):
-                pyautogui.doubleClick(posicion)
+        if foundPosition is not None:
+            print(imagesList[position])
+            if (imagesList[position] == 'claim2.png' or imagesList[position] == 'claim1.png') and (tin-tout > 2):
+                claim.claim(foundPosition)
+            elif not (imagesList[position] == 'claim2.png' and imagesList[position] == 'claim1.png'):
+                pyautogui.doubleClick(foundPosition)
                 pyautogui.moveTo(1, 20)
         else:
-            print('-----', posicion)
+            print('-----', foundPosition)
