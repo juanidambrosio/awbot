@@ -7,7 +7,6 @@ BACKOFF_MULTIPLIER = 0
 
 
 def captcha():
-    global BACKOFF_MULTIPLIER
     headphone = pyautogui.locateOnScreen('pycho2/headphone.png')
     pyautogui.click(headphone)
     time.sleep(1)
@@ -15,7 +14,9 @@ def captcha():
     if detected is not None:
         detectedBot()
     else:
+        global BACKOFF_MULTIPLIER
         BACKOFF_MULTIPLIER = 0
+        print('Backoff Multiplier:', BACKOFF_MULTIPLIER)
         solveCaptcha()
 
 
@@ -32,7 +33,7 @@ def detectedBot():
     pyautogui.click(deny, clicks=2, interval=0.5)
     secondsToSleep = int(sys.argv[1]) * BACKOFF_MULTIPLIER
     print('Waiting', secondsToSleep,
-            'to have better luck with the captcha')
+            'seconds to have better luck with the captcha')
     time.sleep(secondsToSleep)
 
 
