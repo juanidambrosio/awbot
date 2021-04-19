@@ -18,7 +18,7 @@ while True:
             if (imagesList[position] == 'claim2.png' or imagesList[position] == 'claim1.png') and (tin-tout > 2):
                 claim.claim(foundPosition)
             elif not (imagesList[position] == 'claim2.png' and imagesList[position] == 'claim1.png'):
-                pyautogui.doubleClick(foundPosition)
+                pyautogui.click(foundPosition)
                 pyautogui.moveTo(1, 20)
         else:
             print('-----', foundPosition)
