@@ -19,7 +19,7 @@ def localizeClaimingTlmAndHitRefresh():
     logger.info('Se colgo el popup, rippeado')
     refreshed = False
     retry = 0
-    while not refreshed and retry < 5:
+    while not refreshed:
         claiming = pyautogui.locateOnScreen(
             'pycho2/claimingTlm.png') or pyautogui.locateOnScreen('pycho2/claimingTlm2.png')
         if claiming is not None:
@@ -30,6 +30,7 @@ def localizeClaimingTlmAndHitRefresh():
             return None
         else:
             retry += 1
-            if retry == 5:
+            if retry == 3:
                 logger.info(
                     'No se encontró un minero en estado "Claiming TLM", asegurate de recortar bien ambos textos. Tu minero va a quedar inactivo :(')
+            return None

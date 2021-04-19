@@ -10,13 +10,10 @@ logger = logger.getLogger()
 def captcha():
     eye = pyautogui.locateOnScreen('pycho2/eye.png')
     if eye is not None:
-        solveCaptcha()
-        return None
-    switchToAudio()
-    detected = pyautogui.locateOnScreen('pycho2/botDetection.png')
-    if detected is not None:
-        detectedBot()
-        return True
+        return solveCaptcha()
+    detected = switchToAudio()
+    if detected is True:
+        return detected
     else:
         global BACKOFF_MULTIPLIER
         BACKOFF_MULTIPLIER = 0
@@ -33,7 +30,7 @@ def detectedBot():
     deny = None
     while deny is None:
         deny = pyautogui.locateOnScreen('pycho2/deny.png')
-    pyautogui.click(deny, clicks=2, interval=0.5)
+    pyautogui.click(deny)
     secondsToSleep = 30 * BACKOFF_MULTIPLIER
     logger.info('Detectaron el bot, esperando', secondsToSleep,
                 'segundos para tener mejor suerte con el captcha')
@@ -44,7 +41,10 @@ def switchToAudio():
     headphone = pyautogui.locateOnScreen('pycho2/headphone.png') 
     if headphone is not None:
         pyautogui.click(headphone)
-        
+        time.sleep(1)
+        if pyautogui.locateOnScreen('pycho2/botDetection.png') is not None:
+            detectedBot()
+            return True
 
 
 def solveCaptcha():
