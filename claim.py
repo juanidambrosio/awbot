@@ -30,15 +30,23 @@ def claim(foundPosition):
                 return None
     captchaList = ['pycho2/tiki.png', 'pycho2/headphone.png', 'pycho2/eye.png', 'pycho2/notARobotRed.png']
     position = 0
-    band = False
-    while not band:
+    retry = 0
+    approved = False
+    detected = False
+    while not approved and not detected:
         foundPosition = pyautogui.locateOnScreen(captchaList[position])
         if foundPosition is not None:
             if position > 0:
-                captcha.captcha()
+                detected = captcha.captcha()
             elif position == 0:
                 pyautogui.click('pycho2/approve.png')
-            band = True
+                print('Aprobado')
+                approved = True
+                if pyautogui.locateOnScreen('pycho2/approve.png') is not None:
+                    refresh.localizeClaimingTlmAndHitRefresh()
         else:
-            position = -position + 1
+            if position < 3:
+                position += 1
+            else:
+                position = 0
     tout = time.time()

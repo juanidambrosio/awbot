@@ -1,7 +1,6 @@
 import pyautogui
 import speech_recognition as sr
 import time
-import sys
 
 BACKOFF_MULTIPLIER = 0
 
@@ -17,10 +16,11 @@ def captcha():
     detected = pyautogui.locateOnScreen('pycho2/botDetection.png')
     if detected is not None:
         detectedBot()
+        return True
     else:
         global BACKOFF_MULTIPLIER
         BACKOFF_MULTIPLIER = 0
-        solveCaptcha()
+        return solveCaptcha()
 
 
 def detectedBot():
@@ -30,8 +30,8 @@ def detectedBot():
     else:
         BACKOFF_MULTIPLIER = 1
     pyautogui.click('pycho2/goBack.png')
-    deny = pyautogui.locateOnScreen('pycho2/deny.png')
-    while deny == None:
+    deny = None
+    while deny is None:
         deny = pyautogui.locateOnScreen('pycho2/deny.png')
     pyautogui.click(deny, clicks=2, interval=0.5)
     secondsToSleep = 30 * BACKOFF_MULTIPLIER
@@ -44,24 +44,9 @@ def solveCaptcha():
     listenAudioAndVerify()
     if pyautogui.locateOnScreen('pycho2/botDetection.png'):
         detectedBot()
-        return None
-    approved = False
-    retry = 0
-    while not approved and retry < 10:
-        approveButton = pyautogui.locateOnScreen('pycho2/approve.png')
-        redCheckbox = pyautogui.locateOnScreen('pycho2/notARobotRed.png')
-        if approveButton is not None:
-            pyautogui.click(approveButton)
-            print('Aprobado')
-            approved = True
-        elif redCheckbox is not None:
-            pyautogui.click(redCheckbox)
-            print('Check rojo apretado')
-            approved = True
-            captcha()
-        retry += 1
-    if retry == 10:
-        pyautogui.hotkey('alt', 'f4')
+        return True
+    else:
+        return False
 
 
 def listenAudioAndVerify():
