@@ -2,6 +2,10 @@ import pyautogui
 import time
 import captcha
 import refresh
+import logger
+
+logger = logger.getLogger()
+
 
 def claim(foundPosition):
     cross = pyautogui.locateOnScreen(
@@ -28,7 +32,8 @@ def claim(foundPosition):
                 band = True
                 refresh.refreshMiner()
                 return None
-    captchaList = ['pycho2/tiki.png', 'pycho2/headphone.png', 'pycho2/eye.png', 'pycho2/notARobotRed.png']
+    captchaList = ['pycho2/tiki.png', 'pycho2/headphone.png',
+                   'pycho2/eye.png', 'pycho2/notARobotRed.png']
     position = 0
     retry = 0
     approved = False
@@ -38,9 +43,10 @@ def claim(foundPosition):
         if foundPosition is not None:
             if position > 0 and position < 3:
                 detected = captcha.captcha()
+                position = 0
             elif position == 0:
                 pyautogui.click('pycho2/approve.png')
-                print('Aprobado')
+                logger.info('Aprobado')
                 approved = True
                 if pyautogui.locateOnScreen('pycho2/approve.png') is not None:
                     refresh.localizeClaimingTlmAndHitRefresh()

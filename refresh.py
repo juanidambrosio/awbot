@@ -1,4 +1,8 @@
 import pyautogui
+import logger
+
+logger = logger.getLogger()
+
 
 def refreshMiner():
     loading = pyautogui.locateOnScreen(
@@ -7,19 +11,25 @@ def refreshMiner():
         pyautogui.click(loading)
         localizeClaimingTlmAndHitRefresh()
     else:
-        print('No se encontró el popup - abortando claim')
-    
+        logger.info('No se encontró el popup - abortando claim')
+
 
 def localizeClaimingTlmAndHitRefresh():
     pyautogui.hotkey('alt', 'f4')
-    print('Se colgo el popup, rippeado')
+    logger.info('Se colgo el popup, rippeado')
     refreshed = False
-    while not refreshed:
+    retry = 0
+    while not refreshed and retry < 5:
         claiming = pyautogui.locateOnScreen(
             'pycho2/claimingTlm.png') or pyautogui.locateOnScreen('pycho2/claimingTlm2.png')
         if claiming is not None:
             pyautogui.click(claiming)
             pyautogui.press('f5')
             refreshed = True
-            print('f5 al minero')
+            logger.info('f5 al minero')
             return None
+        else:
+            retry += 1
+            if retry == 5:
+                logger.info(
+                    'No se encontró un minero en estado "Claiming TLM", asegurate de recortar bien ambos textos. Tu minero va a quedar inactivo :(')
