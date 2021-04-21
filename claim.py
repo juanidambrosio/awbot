@@ -14,18 +14,13 @@ def claim(foundPosition):
     retry = 0
     while not band:
         checkbox = pyautogui.locateOnScreen(
-            'pycho2/notARobotCheck.png') or pyautogui.locateOnScreen('pycho2/notARobotBlue.png') or pyautogui.locateOnScreen('pycho2/notARobotRed.png')
-        hideDetails = pyautogui.locateOnScreen(
-            'pycho2/hideDetails.png')
+            'pycho2/notARobotCheck.png')
         if checkbox is not None:
             pyautogui.click(checkbox)
-            pyautogui.moveTo(checkbox[0]-100, checkbox[1]+100)
             band = True
-        elif hideDetails is not None:
-            pyautogui.click(hideDetails)
         else:
             retry += 1
-            if retry == 3:
+            if retry == 10:
                 band = True
                 refresh.refreshMiner()
                 return None
