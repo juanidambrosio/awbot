@@ -8,10 +8,7 @@ logger = logger.getLogger()
 
 
 def claim(foundPosition):
-    cross = pyautogui.locateOnScreen(
-        'pycho/claim1otracruz.png') or pyautogui.locateOnScreen('pycho/claim2cruz.png')
-    if cross is not None:
-        pyautogui.click(cross)
+    previousChecks()
     pyautogui.click(foundPosition)
     band = False
     retry = 0
@@ -46,6 +43,7 @@ def claim(foundPosition):
                 position = 0
             elif position == 0:
                 pyautogui.click('pycho2/approve.png')
+                pyautogui.move(0, -100)
                 logger.info('Aprobado')
                 approved = True
                 if pyautogui.locateOnScreen('pycho2/approve.png') is not None:
@@ -57,5 +55,15 @@ def claim(foundPosition):
             position += 1
         else:
             position = 0
-            retry +=1
+            retry += 1
     tout = time.time()
+
+
+def previousChecks():
+    cross = pyautogui.locateOnScreen(
+        'pycho/claim1otracruz.png') or pyautogui.locateOnScreen('pycho/claim2cruz.png')
+    if cross is not None:
+        pyautogui.click(cross)
+    deny = pyautogui.locateOnScreen('pycho2/deny.png')
+    if deny is not None:
+        pyautogui.click(deny)
