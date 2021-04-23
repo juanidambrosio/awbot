@@ -15,8 +15,6 @@ def captcha():
     if detected is True:
         return detected
     else:
-        global BACKOFF_MULTIPLIER
-        BACKOFF_MULTIPLIER = 0
         return solveCaptcha()
 
 
@@ -30,6 +28,8 @@ def solveCaptcha():
         goBack()
         return True
     else:
+        global BACKOFF_MULTIPLIER
+        BACKOFF_MULTIPLIER = 0
         return False
 
 
@@ -102,9 +102,8 @@ def detectedBot():
 
 
 def goBack():
-    pyautogui.click('pycho2/goBack.png')
     deny = None
     while deny is None:
-        deny = pyautogui.locateOnScreen('pycho/deny.png')
+        deny = pyautogui.locateOnScreen('pycho/deny.png', confidence=0.8)
     time.sleep(1)
-    pyautogui.click(deny)
+    pyautogui.click(deny, clicks=2, interval=0.5)

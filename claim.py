@@ -39,6 +39,8 @@ def claim(foundPosition):
                 pyautogui.click('pycho2/approve.png')
                 pyautogui.move(0, -100)
                 logger.info('Aprobado')
+                global BACKOFF_MULTIPLIER
+                BACKOFF_MULTIPLIER = 0
                 approved = True
             elif position == 3:
                 pyautogui.click('pycho2/notARobotRed.png', confidence=0.8)
