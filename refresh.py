@@ -6,7 +6,7 @@ logger = logger.getLogger()
 
 def refreshMiner():
     loading = pyautogui.locateOnScreen(
-        'pycho2/loadingTransaction.png')
+        'pycho2/loadingTransaction.png', confidence=0.8)
     if loading is not None:
         pyautogui.click(loading)
         localizeClaimingTlmAndHitRefresh()
@@ -21,7 +21,7 @@ def localizeClaimingTlmAndHitRefresh():
     retry = 0
     while not refreshed:
         claiming = pyautogui.locateOnScreen(
-            'pycho2/claimingTlm.png') or pyautogui.locateOnScreen('pycho2/claimingTlm2.png')
+            'pycho2/claimingTlm.png', confidence=0.8) or pyautogui.locateOnScreen('pycho2/claimingTlm2.png', confidence=0.8)
         if claiming is not None:
             pyautogui.click(claiming)
             pyautogui.press('f5')

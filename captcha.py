@@ -8,7 +8,7 @@ logger = logger.getLogger()
 
 
 def captcha():
-    eye = pyautogui.locateOnScreen('pycho2/eye.png')
+    eye = pyautogui.locateOnScreen('pycho2/eye.png', confidence=0.8)
     if eye is not None:
         return solveCaptcha()
     detected = switchToAudio()
@@ -22,7 +22,7 @@ def captcha():
 
 def solveCaptcha():
     listened = listenAudioAndVerify()
-    detected = pyautogui.locateOnScreen('pycho2/botDetection.png')
+    detected = pyautogui.locateOnScreen('pycho2/botDetection.png', confidence=0.8)
     if detected is not None:
         detectedBot()
         return True
@@ -34,11 +34,11 @@ def solveCaptcha():
 
 
 def switchToAudio():
-    headphone = pyautogui.locateOnScreen('pycho2/headphone.png')
+    headphone = pyautogui.locateOnScreen('pycho2/headphone.png', confidence=0.8)
     if headphone is not None:
         pyautogui.click(headphone)
         time.sleep(2)
-        detected = pyautogui.locateOnScreen('pycho2/botDetection.png')
+        detected = pyautogui.locateOnScreen('pycho2/botDetection.png', confidence=0.8)
         if detected is not None:
             detectedBot()
             return True
@@ -50,7 +50,7 @@ def listenAudioAndVerify():
     bandst = False
     retry = 0
     while bandst is not True and retry < 2:
-        playbtn = pyautogui.locateOnScreen('pycho2/play.png')
+        playbtn = pyautogui.locateOnScreen('pycho2/play.png', confidence=0.8)
         if playbtn is not None:
             bandst = True
             listened = playAudioAndWrite(r, mic, playbtn)
@@ -61,10 +61,10 @@ def listenAudioAndVerify():
             if retry == 2:
                 return None
     time.sleep(2)
-    multipleSolutions = pyautogui.locateOnScreen('pycho2/multipleSolutions.png')
+    multipleSolutions = pyautogui.locateOnScreen('pycho2/multipleSolutions.png', confidence=0.8)
     if multipleSolutions is not None:
         logger.info('Reintento de audio')
-        playbtn = pyautogui.locateOnScreen('pycho2/play.png')
+        playbtn = pyautogui.locateOnScreen('pycho2/play.png', confidence=0.8)
         return playAudioAndWrite(r, mic, playbtn)
 
 
@@ -105,5 +105,6 @@ def goBack():
     pyautogui.click('pycho2/goBack.png')
     deny = None
     while deny is None:
-        deny = pyautogui.locateOnScreen('pycho2/deny.png')
+        deny = pyautogui.locateOnScreen('pycho/deny.png')
+    time.sleep(1)
     pyautogui.click(deny)

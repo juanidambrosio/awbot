@@ -11,7 +11,7 @@ logger = logger.getLogger()
 while True:
     for position in range(len(imagesList)):
         photo = path + '/' + imagesList[position]
-        foundPosition = pyautogui.locateOnScreen(photo)
+        foundPosition = pyautogui.locateOnScreen(photo, confidence=0.8)
         tin = time.time()
         if foundPosition is not None:
             logger.info(imagesList[position])
